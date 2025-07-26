@@ -50,26 +50,44 @@
 
 ## 🚦 Tổng quan pipeline hoạt động
 
-```mermaid
-graph TD
-    A[Người dùng gửi tin nhắn] --> B[Flask Backend (test.py)]
-    B --> C[Nhận diện cảm xúc & tối ưu prompt]
-    C --> D[Gemini API: Sinh phản hồi]
-    D --> E[Lưu lịch sử hội thoại]
-    E --> F[Tóm tắt hội thoại cũ (nếu cần)]
-    F --> G[Trả về phản hồi cho giao diện chat]
-    G --> H[Hiển thị lịch sử, cảm xúc, thống kê]
+1️⃣ **Người dùng gửi tin nhắn** qua giao diện web (chat.html).
+
+2️⃣ **Flask Backend (`test.py`)** nhận tin nhắn, xác định chủ đề, phân tích cảm xúc, tối ưu prompt cá nhân hóa.
+
+3️⃣ **Gemini API** sinh phản hồi tự nhiên, đa dạng, đúng giọng vùng miền.
+
+4️⃣ **Lưu lịch sử hội thoại**  
+  - Lưu 10 tin nhắn gần nhất cho hiển thị nhanh  
+  - Lưu toàn bộ hội thoại vào backup  
+  - Tự động tóm tắt hội thoại cũ khi vượt ngưỡng
+
+5️⃣ **Trả về phản hồi cho giao diện chat**  
+  - Hiển thị lịch sử, cảm xúc, avatar, timestamp  
+  - Auto scroll, phân biệt user/bot
+
+6️⃣ **Dashboard thống kê**  
+  - Số lượng tin nhắn, cảm xúc, trạng thái từng chủ đề  
+  - Xuất dữ liệu, xem biểu đồ cảm xúc
+
+---
+
+### 🔎 Minh họa pipeline
+
 ```
-
-### 🔎 Chi tiết pipeline
-
-1. **Người dùng gửi tin nhắn** qua giao diện chat.
-2. **Backend Flask** nhận tin nhắn, xác định chủ đề, phân tích cảm xúc, tối ưu prompt cá nhân hóa.
-3. **Gemini API** sinh phản hồi tự nhiên, đa dạng, đúng giọng vùng miền.
-4. **Lưu lịch sử hội thoại** (10 tin nhắn gần nhất + backup toàn bộ).
-5. **Tóm tắt hội thoại cũ** tự động khi quá ngưỡng, giúp tiết kiệm tài nguyên và tăng hiệu quả.
-6. **Trả về phản hồi** cho giao diện chat, hiển thị lịch sử, cảm xúc, avatar, timestamp.
-7. **Dashboard thống kê**: Số lượng tin nhắn, cảm xúc, trạng thái từng chủ đề, xuất dữ liệu.
+[Người dùng] 
+   ⬇️
+[Giao diện chat.html] 
+   ⬇️
+[Flask Backend (test.py)] 
+   ⬇️
+[Gemini API] 
+   ⬇️
+[Lưu lịch sử + Tóm tắt] 
+   ⬇️
+[Trả về phản hồi] 
+   ⬇️
+[Hiển thị trên giao diện + Dashboard]
+```
 
 ---
 
