@@ -115,10 +115,11 @@ python test.py
 
 - Mặc định chạy ở `http://localhost:5000`
 - Khi chạy lần đầu, các thư mục dữ liệu sẽ tự động được tạo.
+- Trong terminal sau khi chạy, có thể copy đường dẫn http://127.0.0.1:5000 và dán lên web (chrome) và sau đó chỉ việc sử dụng
 
 ### 4. Truy cập giao diện
 
-- Mở trình duyệt và truy cập: [http://localhost:5000](http://localhost:5000)
+- Mở trình duyệt và truy cập: [http://127.0.0.1:5000](http://127.0.0.1:5000)
 - Chọn chủ đề để bắt đầu trò chuyện.
 
 ---
