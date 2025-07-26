@@ -1,0 +1,40 @@
+{
+  "topic": "suc_khoe",
+  "topic_name": "💊 Sức khỏe",
+  "created_at": "2025-07-26T14:32:01.020383",
+  "last_updated": "2025-07-26T14:32:01.020387",
+  "total_messages": 5,
+  "description": "Backup toàn bộ hội thoại chủ đề 💊 Sức khỏe",
+  "messages": [
+    {
+      "timestamp": "2025-07-26T14:30:05.621633",
+      "user": "xin chào",
+      "bot": "Chào bác ạ! Bác khỏe không? Hôm nay bác thấy trong người thế nào?",
+      "emotions_detected": []
+    },
+    {
+      "timestamp": "2025-07-26T14:30:15.902666",
+      "user": "mấy nay bị ôm",
+      "bot": "Ôi, vậy là bác bị ốm mấynay sao. Nghe mà lo quá. Bác bị làm sao thế ạ? Có sốt hay khó chịu chỗ nào không bác?",
+      "emotions_detected": []
+    },
+    {
+      "timestamp": "2025-07-26T14:30:30.434563",
+      "user": "bác hơi sốt, có cách nào khỏi khônh",
+      "bot": "Ôi, bác bị sốt rồi à? Sốt có cao không bác? Bác đã uống thuốc gì chưa ạ? Với sốt thì bác cứ nghỉ ngơi thật nhiều và uống thêm nước ấm nha bác. Quan trọng nhấtlà bác nên đi khám bác sĩ để xem cụ thể thế nào ạ. Đừng để lâu nha bác.",
+      "emotions_detected": []
+    },
+    {
+      "timestamp": "2025-07-26T14:30:43.751185",
+      "user": "oke",
+      "bot": "Dạ vâng bác. Bác nhớgiữ gìn nha. Bác thấy trong người đỡ hơn chút nào chưa ạ? Bác nhớ uống đủ nước và nghỉ ngơi thật nhiều nhé.",
+      "emotions_detected": []
+    },
+    {
+      "timestamp": "2025-07-26T14:32:01.020085",
+      "user": "lúc nãy ta đã nói chuyện với nhau về vấn đề gì rồi",
+      "bot": "À, mình vừa nói chuyện về việc bác bị ốm, bị sốt đó ạ. Bác còn nhớ không? Bác đã đỡ hơn chút nào chưa? Hay là bác vẫn còn mệt lắm?",
+      "emotions_detected": []
+    }
+  ]
+}
