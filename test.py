@@ -12,7 +12,7 @@ app = Flask(__name__)
 app.secret_key = 'your-secret-key-here-change-this'  # Thay đổi key này
 
 # Cấu hình Gemini API
-API_KEY = ""
+API_KEY = "AIzaSyBtARGbaM83LV6awCe4FiQK3bD4SErVn7s"
 genai.configure(api_key=API_KEY)
 
 # Khởi tạo model
@@ -52,9 +52,9 @@ TOPICS = {
 }
 
 # Cấu hình
-CONTEXT_LIMIT = 20
-SUMMARY_THRESHOLD = 50
-SUMMARY_BATCH_SIZE = 30
+CONTEXT_LIMIT = 10
+SUMMARY_THRESHOLD = 20
+SUMMARY_BATCH_SIZE = 10
 USER_INFO_FILE = 'user_info.json'
 TOPICS_DIR = 'topics'
 
@@ -865,8 +865,24 @@ Hãy trả lời theo format JSON:
         
         # Parse JSON response
         try:
-            summary_data = json.loads(response.text)
-            return summary_data
+            # Loại bỏ các ký tự trắng ở đầu và cuối
+            trimmed_response = response.text.strip()
+            # Loại bỏ các khối mã nếu có
+            trimmed_response = trimmed_response.split('```')[1].strip() if '```' in trimmed_response else trimmed_response
+            trimmed_response = trimmed_response[4:].strip()
+            print(trimmed_response)  # Log phản hồi đã trim
+            # Kiểm tra nếu phản hồi là một chuỗi JSON hợp lệ
+            if trimmed_response.startswith('{') and trimmed_response.endswith('}'):
+                summary_data = json.loads(trimmed_response)
+                return summary_data
+            else:
+                print("Phản hồi không phải là JSON hợp lệ.")
+                return {
+                    "summary": f"Tóm tắt {len(conversations)} đoạn hội thoại về {topic_name}",
+                    "personal_info": [],
+                    "key_topics": [topic_name],
+                    "important_facts": []
+                }
         except json.JSONDecodeError:
             # Fallback nếu không parse được JSON
             return {
@@ -889,28 +905,25 @@ def update_summary_file(topic_key, conversations_to_summarize):
     """Cập nhật file tóm tắt theo chủ đề"""
     try:
         # Load existing summary
-        summary_data = load_summary_data(topic_key)
+        summary_data = {
+            'topic': topic_key,
+            'topic_name': TOPICS[topic_key]['name'],
+            'created_at': datetime.now().isoformat(),
+            'last_updated': datetime.now().isoformat(),
+            'summary_version': 1,  # Bắt đầu lại từ phiên bản 1
+            'total_conversations_summarized': len(conversations_to_summarize),  # Đếm số đoạn được tóm tắt
+            'summary_layers': []  # Reset lại danh sách layer
+        }
         
         # Tạo tóm tắt cho batch mới
         new_summary = create_conversation_summary(topic_key, conversations_to_summarize)
         
-        # Thêm layer mới
-        start_range = summary_data['total_conversations_summarized'] + 1
-        end_range = summary_data['total_conversations_summarized'] + len(conversations_to_summarize)
+        # Cập nhật nội dung tóm tắt
+        summary_data['summary'] = new_summary['summary']
+        summary_data['key_topics'] = new_summary['key_topics']
+        summary_data['important_facts'] = new_summary['personal_info'] + new_summary['important_facts']
         
-        new_layer = {
-            'layer': len(summary_data['summary_layers']) + 1,
-            'conversations_range': f"{start_range}-{end_range}",
-            'summary': new_summary['summary'],
-            'key_topics': new_summary['key_topics'],
-            'important_facts': new_summary['personal_info'] + new_summary['important_facts']
-        }
-        
-        summary_data['summary_layers'].append(new_layer)
-        summary_data['total_conversations_summarized'] += len(conversations_to_summarize)
-        summary_data['last_updated'] = datetime.now().isoformat()
-        
-        # Save updated summary
+        # Lưu updated summary
         save_summary_data(topic_key, summary_data)
         print(f"Đã tạo tóm tắt cho {len(conversations_to_summarize)} đoạn hội thoại chủ đề {topic_key}")
         
@@ -980,16 +993,16 @@ def restore_chat_session_with_summary(topic_key):
         # Tạo context prompt với tóm tắt
         context_prompt = get_system_prompt(topic_key)
         
-        if summary_data and summary_data['summary_layers']:
-            context_prompt += f"\n\nTHÔNG TIN TỪ CÁC CUỘC HỘI THOẠI TRƯỚC VỀ {TOPICS[topic_key]['name'].upper()}:\n"
-            
-            for layer in summary_data['summary_layers']:
-                context_prompt += f"\nGiai đoạn {layer['conversations_range']}:\n"
-                context_prompt += f"- Tóm tắt: {layer['summary']}\n"
-                if layer['key_topics']:
-                    context_prompt += f"- Chủ đề chính: {', '.join(layer['key_topics'])}\n"
-                if layer['important_facts']:
-                    context_prompt += f"- Thông tin quan trọng: {', '.join(layer['important_facts'])}\n"
+        # print(context_prompt)
+        
+        # Thêm tóm tắt chính vào prompt
+        if summary_data and 'summary' in summary_data:
+            context_prompt += f"\n\nTóm tắt từ các cuộc hội thoại trước về {TOPICS[topic_key]['name'].upper()}:\n"
+            context_prompt += f"- Tóm tắt: {summary_data['summary']}\n"
+            if summary_data['key_topics']:
+                context_prompt += f"- Chủ đề chính: {', '.join(summary_data['key_topics'])}\n"
+            if summary_data['important_facts']:
+                context_prompt += f"- Thông tin quan trọng: {', '.join(summary_data['important_facts'])}\n"
         
         # Tạo history cho Gemini
         gemini_history = [
