@@ -1,0 +1,56 @@
+# Virtual environments
+*_venv/
+llms_venv/
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Environment variables
+.env
+
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Logs
+logs/
+*.log
+
+# Audio samples (có thể khá nặng)
+# audio_samples/
+
+# Data files
+data/
+*.json
+*.csv
+
+# VS Code
+.vscode/
+.cph/
+
+# Reports and documentation (có thể nặng)
+BÁO CÁO/
+Chatbot_for_elders/
+
+# STT-LLMs folder (có thể nặng)
+STT - LLMs/
+
+# Topics folder
+topics/
+
+# Templates
+templates/
+
+# Exclude pipeline2 as requested
+pipeline2/
+
+# Test files that might be large
+test_load.py
+test_optimized.py
+
+# User info
+user_info.json
